@@ -1,0 +1,10 @@
+{
+  "name": "@zapply/job-board-consumer",
+  "version": "1.0.0",
+  "description": "Zapply consumer repo logic — aggregator consumer, readme generator",
+  "main": "lib/aggregator-consumer.js",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "license": "MIT"
+}
