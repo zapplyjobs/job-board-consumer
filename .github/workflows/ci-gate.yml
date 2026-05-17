@@ -73,8 +73,10 @@ jobs:
 
       - name: Check require() paths resolve
         run: |
-          ERRORS=0
+          ERRORS_FILE=$(mktemp)
+          echo "0" > "$ERRORS_FILE"
           while IFS= read -r -d '' FILE; do
+            # Extract relative require() paths (./ or ../)
             grep -oP "require\(['\"](\.\.?/[^'\"]+)['\"]\)" "$FILE" | grep -oP "(?<=['\"])\.\.?/[^'\"]+" | while read -r REQ; do
               DIR=$(dirname "$FILE")
               RESOLVED="$DIR/$REQ"
@@ -86,11 +88,13 @@ jobs:
                 fi
               done
               if [ "$FOUND" = "false" ]; then
-                echo "::error file=$FILE::$FILE requires '$REQ' but no matching file found"
-                ERRORS=$((ERRORS + 1))
+                echo "::error file=$FILE::$FILE requires '$REQ' but no matching file found (tried $RESOLVED, $RESOLVED.js, $RESOLVED/index.js)"
+                echo "$(( $(cat "$ERRORS_FILE") + 1 ))" > "$ERRORS_FILE"
               fi
             done
           done < <(find . -name '*.js' -not -path './node_modules/*' -print0)
+          ERRORS=$(cat "$ERRORS_FILE")
+          rm -f "$ERRORS_FILE"
           if [ "$ERRORS" -gt 0 ]; then
             echo "FAIL: $ERRORS unresolved require() path(s)"
             exit 1
