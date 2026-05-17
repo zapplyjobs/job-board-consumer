@@ -26,7 +26,8 @@ jobs:
           for FILE in \
             package.json \
             lib/aggregator-consumer.js \
-            lib/readme-generator.js
+            lib/readme-generator.js \
+            lib/storage/r2-client.js
           do
             if [ ! -f "$FILE" ]; then
               echo "::error file=$FILE::Critical file missing: $FILE"
@@ -69,6 +70,32 @@ jobs:
             exit 1
           fi
           echo "PASS: All JS files valid syntax"
+
+      - name: Check require() paths resolve
+        run: |
+          ERRORS=0
+          while IFS= read -r -d '' FILE; do
+            grep -oP "require\(['\"](\.\.?/[^'\"]+)['\"]\)" "$FILE" | grep -oP "(?<=['\"])\.\.?/[^'\"]+" | while read -r REQ; do
+              DIR=$(dirname "$FILE")
+              RESOLVED="$DIR/$REQ"
+              FOUND=false
+              for CANDIDATE in "$RESOLVED" "$RESOLVED.js" "$RESOLVED/index.js"; do
+                if [ -f "$CANDIDATE" ]; then
+                  FOUND=true
+                  break
+                fi
+              done
+              if [ "$FOUND" = "false" ]; then
+                echo "::error file=$FILE::$FILE requires '$REQ' but no matching file found"
+                ERRORS=$((ERRORS + 1))
+              fi
+            done
+          done < <(find . -name '*.js' -not -path './node_modules/*' -print0)
+          if [ "$ERRORS" -gt 0 ]; then
+            echo "FAIL: $ERRORS unresolved require() path(s)"
+            exit 1
+          fi
+          echo "PASS: All require() paths resolve"
 
       - name: Deletion threshold check
         if: github.event_name == 'push'
