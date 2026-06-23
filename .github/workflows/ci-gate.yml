@@ -71,6 +71,18 @@ jobs:
             exit 1
           fi
           echo "PASS: All JS files valid syntax"
+      - name: Check README cover template invariant
+        run: |
+          if ! grep -q 'images/covers/cover.png' lib/readme-generator.js; then
+            echo "::error file=lib/readme-generator.js::README generator must render images/covers/cover.png as the top cover image"
+            exit 1
+          fi
+          if grep -q 'images/${config.repoPrefix}-heading.png' lib/readme-generator.js; then
+            echo "::error file=lib/readme-generator.js::README generator must not render repoPrefix heading images as the top cover image"
+            exit 1
+          fi
+          echo "PASS: README cover template uses images/covers/cover.png"
+
 
       - name: Check require() paths resolve
         run: |
