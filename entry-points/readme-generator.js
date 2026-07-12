@@ -1,5 +1,6 @@
 const path = require('path');
-const config = require(path.join(process.cwd(), '.github/scripts/job-fetcher/config.js'));
-const jobCategories = require(path.join(process.cwd(), '.github/scripts/job-fetcher/job_categories.json'));
+const { config, loadSibling } = require('./config-loader');
+const jobCategoriesPath = loadSibling('job_categories.json');
+const jobCategories = jobCategoriesPath ? require(jobCategoriesPath) : {};
 const { createReadmeGenerator } = require(path.join(__dirname, '../lib/readme-generator.js'));
 module.exports = createReadmeGenerator(config, jobCategories, process.cwd());

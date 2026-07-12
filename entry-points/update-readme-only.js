@@ -1,18 +1,12 @@
 #!/usr/bin/env node
-/**
- * update-readme-only.js — Consumer README regenerator (entry-point, lives in private submodule).
- * Reads the feed from Cloudflare R2 via the shared r2-client, falling back to
- * the committed snapshot when R2 credentials are absent or the read fails.
- * Feed key + prefix come from the consumer repo's config.js — single source of truth.
- */
 const fs = require('fs');
 const path = require('path');
 const { logger } = require('../index.js');
 const { updateReadme } = require('./readme-generator');
 const { createR2Client } = require('../lib/storage/r2-client');
-const config = require(path.join(process.cwd(), '.github/scripts/job-fetcher/config.js'));
+const { config } = require('./config-loader');
 
-const SNAPSHOT = path.join(process.cwd(), '.github/data/current_jobs.json');
+const SNAPSHOT = path.join(process.cwd(), '.github', 'data', 'current_jobs.json');
 const FEED_KEY = config.feedKey;
 const R2_PREFIX = config.r2Prefix || 'data/';
 
@@ -51,15 +45,14 @@ function normalizeJob(row) {
 async function main() {
   try {
     logger.start('README regeneration', { mode: 'R2 preferred, snapshot fallback', feed: FEED_KEY });
-    let rawJobs;
-    let source;
+    let rawJobs, source;
     try {
       rawJobs = await loadFromR2();
       source = 'r2';
       logger.info('Loaded live feed from R2', { source, key: R2_PREFIX + FEED_KEY, count: rawJobs.length });
     } catch (err) {
       source = 'snapshot';
-      logger.warn('Falling back to committed snapshot', { source, reason: err.message });
+      logger.warn('Falling back to snapshot', { source, reason: err.message });
       rawJobs = loadFromSnapshot();
     }
     const allJobs = rawJobs.map(normalizeJob);
