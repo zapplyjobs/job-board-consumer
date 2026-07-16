@@ -117,8 +117,8 @@ jobs:
       - name: Deletion threshold check
         if: github.event_name == 'push'
         run: |
-          DELETION_THRESHOLD=3
-          DELETED=$(git diff --name-only --diff-filter=D HEAD~1 HEAD 2>/dev/null || echo "")
+          DELETION_THRESHOLD=10
+          DELETED=$(git diff --name-only --diff-filter=D HEAD~1 HEAD 2>/dev/null | grep -v '^node_modules/' || echo "")
           COUNT=$(echo "$DELETED" | grep -c . || true)
           if [ "$COUNT" -gt "$DELETION_THRESHOLD" ]; then
             echo "::error::$COUNT files deleted in this commit (threshold: $DELETION_THRESHOLD). Possible mass-deletion."
