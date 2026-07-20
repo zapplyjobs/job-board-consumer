@@ -1,17 +1,14 @@
-const _log = (level, msg, ctx) => {
-  const ts = new Date().toISOString();
-  const ctxStr = ctx && Object.keys(ctx).length ? ' ' + JSON.stringify(ctx) : '';
-  console.log(`[${ts}] [${level}]${ctxStr} ${msg}`);
-};
-
-const logger = {
-  debug:    (msg, ctx) => _log('DEBUG', msg, ctx),
-  info:     (msg, ctx) => _log('INFO',  msg, ctx),
-  warn:     (msg, ctx) => _log('WARN',  msg, ctx),
-  error:    (msg, ctx) => _log('ERROR', msg, ctx),
-  fatal:    (msg, ctx) => { _log('FATAL', msg, ctx); },
-  start:    (msg, ctx) => _log('START', msg, ctx),
-  complete: (msg, ctx) => _log('DONE',  msg, ctx),
-};
-
-module.exports = { logger };
+U2FsdGVkX1/ehI8NSv+gBHOzLv99mN2BowyhehZT5sEHWki2LpZRili9tERz9VHn
+3PqeFweG1T+VVl4S8lW8W5PZzuN3u6pIGBtRI5RFLspoXBi8yyeaJEfaTokNrdDx
+Al5z3PxZycbRlEpFl5YIr3PT0n0yAbopiJZ9T5uApofNQR7BPDlxCfDEDyCDoio2
+AxrmLopqPjmeuTnW5gby/BDzCg9leqZAGz/HgcdntqwABjNZLaTnj9KM4mSYzfb6
++Q0Foa2Ze/lR6HuGgIVsqXhpd8c6krIB/aipWRy69oQ3ie5bNFZVLYIqWn4/GcFt
+bkM4s7n9//ekkSOrAPnz+FECJYUjgNIW4Gr4TL4NLCRhe7+Yih5MVsiHOJ2oVSSr
+aoctM+gPz1e/SCbo0lbE9Qo8ux+bDzHBKRJaW05o5uT9xZG520eUlUQ9MS90ZXct
+S9tKp/pz4SadP/l7u8CzCnaDUvR8deknf+77iaja7Or+ua9yUZwLJyIez8G0G5k5
+N8V632NsAIERxnrGrb7MTArk3KbRxXSfybHICjp//5rhNjBjpsbV9pjpz3/ynEpM
+3RobbV2Ws1/f6st4asyQLH+DdRprLwu0xvUPaIiYJ3ijw1J8TOAfw9UeaNOZgE+F
+rrp0YF891hPFDwyRoFP9nkro5GzJW0XIrWzuojUerwNX1wOANFfGA0L03jbTOfTa
+4wW/Jg8X5fDIWQBPHV4K/i/vlcgTGb9muKfIm9ssb5dhH9JdqNgorKFt4u+VvOWx
+QNwaVnYFDp1aY1MMHXqWZZWDtvVf7Akk4P4tKyTE6TPOWxORKQNN655dOHqJajOU
+dhFIdNUcohevhQ0RqNM3sLb2HWAXHCBwBru1aYdPB3M=
